@@ -1,11 +1,12 @@
-import { fetchCardData, fetchLatestInvoices, fetchRevenue } from '@/app/lib/data';
+import { fetchCardData, fetchLatestInvoices } from '@/app/lib/data';
 import { lusitana } from '@/app/ui/fonts';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
-import { Card } from '../ui/dashboard/cards';
+import { Card } from '../../ui/dashboard/cards';
+import { RevenueChartSkeleton } from '@/app/ui/skeletons';
+import { Suspense } from 'react';
 
 export default async function Page() {
-  const revenue = await fetchRevenue();
   const latestInvoices = await fetchLatestInvoices();
   const {
     numberOfCustomers,
@@ -29,7 +30,9 @@ export default async function Page() {
         />
       </div>
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <RevenueChart revenue={revenue}  />
+        <Suspense fallback={<RevenueChartSkeleton />}>
+          <RevenueChart />
+        </Suspense>
         <LatestInvoices latestInvoices={latestInvoices} />
       </div>
     </main>
